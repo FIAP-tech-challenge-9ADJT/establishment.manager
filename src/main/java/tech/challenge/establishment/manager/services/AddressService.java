@@ -1,14 +1,15 @@
 package tech.challenge.establishment.manager.services;
 
-import org.springframework.stereotype.Service;
-import tech.challenge.establishment.manager.repositories.AddressRepository;
+import tech.challenge.establishment.manager.dtos.address.CreateAddressDTO;
+import tech.challenge.establishment.manager.dtos.address.UpdateAddressDTO;
+import tech.challenge.establishment.manager.entities.Address;
 
-@Service
-public class AddressService {
+public interface AddressService {
+    Address findById(Long id);
 
-    private AddressRepository addressRepository;
+    Address save(CreateAddressDTO address);
 
-    public AddressService(AddressRepository addressRepository){
-        this.addressRepository = addressRepository;
-    }
+    Address update(Long id, UpdateAddressDTO address);
+
+    void delete(Long id);
 }

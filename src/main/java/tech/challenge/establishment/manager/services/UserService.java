@@ -1,14 +1,15 @@
 package tech.challenge.establishment.manager.services;
 
-import org.springframework.stereotype.Service;
-import tech.challenge.establishment.manager.repositories.UserRepository;
+import tech.challenge.establishment.manager.dtos.user.CreateUserDTO;
+import tech.challenge.establishment.manager.dtos.user.UpdateUserDTO;
+import tech.challenge.establishment.manager.entities.User;
 
-@Service
-public class UserService {
+public interface UserService {
+    User findById(Long id);
 
-   private UserRepository userRepository;
+    User save(CreateUserDTO user);
 
-    public UserService(UserRepository userRepository) {
-        this.userRepository = userRepository;
-    }
+    User update(Long id, UpdateUserDTO user);
+
+    void delete(Long id);
 }
