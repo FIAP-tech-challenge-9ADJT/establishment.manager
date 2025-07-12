@@ -14,6 +14,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import tech.challenge.establishment.manager.dtos.user.CreateUserDTO;
 
 @Entity
 @Table(name = "users")
@@ -47,4 +48,12 @@ public class User implements Serializable {
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY, optional = false)
     @JsonBackReference
     private Address address;
+
+    public User(CreateUserDTO createUserDTO) {
+        name =  createUserDTO.name();
+        email = createUserDTO.email();
+        login = createUserDTO.login();
+        password = createUserDTO.password();
+        address = createUserDTO.address();
+    }
 }

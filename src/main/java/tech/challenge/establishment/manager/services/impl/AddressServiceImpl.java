@@ -1,5 +1,6 @@
 package tech.challenge.establishment.manager.services.impl;
 
+import org.springframework.stereotype.Service;
 import tech.challenge.establishment.manager.dtos.address.CreateAddressDTO;
 import tech.challenge.establishment.manager.dtos.address.UpdateAddressDTO;
 import tech.challenge.establishment.manager.entities.Address;
@@ -8,6 +9,7 @@ import tech.challenge.establishment.manager.services.AddressService;
 
 import java.time.LocalDateTime;
 
+@Service
 public class AddressServiceImpl implements AddressService {
 
     private final AddressRepository addressRepository;
@@ -18,15 +20,19 @@ public class AddressServiceImpl implements AddressService {
 
     @Override
     public Address save(CreateAddressDTO createAddressDTO) {
-        var entity = new Address(null, createAddressDTO.street(), createAddressDTO.city(), createAddressDTO.postalCode(), createAddressDTO.number(), LocalDateTime.now(), null, null);
-        return addressRepository.save(entity);
+        try{
+            var entity = new Address(createAddressDTO);
+            return addressRepository.save(entity);
+        }catch(Exception e){
+            throw new RuntimeException(e.getMessage());
+        }
     }
 
     @Override
     public Address update(Long id, UpdateAddressDTO updateAddressDTO) {
-        var addressEntity = addressRepository.findById(id);
+        try{
+            var addressEntity = addressRepository.findById(id);
 
-        if (addressEntity.isPresent()) {
             var address = addressEntity.get();
             if (updateAddressDTO.street() != null && !updateAddressDTO.street().isEmpty()) {
                 address.setStreet(updateAddressDTO.street());
@@ -47,8 +53,9 @@ public class AddressServiceImpl implements AddressService {
             address.setUpdatedAt(LocalDateTime.now());
 
             return addressRepository.save(address);
-        }else{
-            return null;
+
+        }catch(Exception e){
+            throw new RuntimeException(e.getMessage());
         }
     }
 

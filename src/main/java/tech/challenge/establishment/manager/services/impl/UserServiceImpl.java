@@ -1,34 +1,39 @@
 package tech.challenge.establishment.manager.services.impl;
 
+import org.springframework.stereotype.Service;
 import tech.challenge.establishment.manager.dtos.user.CreateUserDTO;
 import tech.challenge.establishment.manager.dtos.user.UpdateUserDTO;
 import tech.challenge.establishment.manager.entities.Address;
 import tech.challenge.establishment.manager.entities.User;
+import tech.challenge.establishment.manager.repositories.AddressRepository;
 import tech.challenge.establishment.manager.repositories.UserRepository;
 import tech.challenge.establishment.manager.services.UserService;
 
 import java.time.LocalDateTime;
-import java.util.UUID;
 
+@Service
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
 
-    public UserServiceImpl(UserRepository userRepository) {
+    public UserServiceImpl(UserRepository userRepository,  AddressRepository addressRepository) {
         this.userRepository = userRepository;
     }
 
     @Override
     public User save(CreateUserDTO createUserDTO) {
-        var entity = new User(null, createUserDTO.name(), createUserDTO.email(), createUserDTO.login(), createUserDTO.password(), LocalDateTime.now(), null, null);
-        return userRepository.save(entity);
+        try{
+            var entity = new User(createUserDTO);
+            return userRepository.save(entity);
+        }catch(Exception e){
+            throw new RuntimeException(e.getMessage());
+        }
     }
 
     @Override
     public User update(Long id, UpdateUserDTO updateUserDTO) {
-        var userEntity = userRepository.findById(id);
-
-        if(userEntity.isPresent()){
+        try{
+            var userEntity = userRepository.findById(id);
             var user = userEntity.get();
 
             if(updateUserDTO.name() != null && !updateUserDTO.name().isEmpty()){
@@ -47,11 +52,16 @@ public class UserServiceImpl implements UserService {
                 user.setPassword(updateUserDTO.password());
             }
 
+            if(updateUserDTO.address() != null){
+                user.setAddress(updateUserDTO.address());
+            }
+
             user.setUpdatedAt(LocalDateTime.now());
 
             return userRepository.save(user);
-        }else{
-            return null;
+
+        }catch(Exception e){
+            throw new RuntimeException(e.getMessage());
         }
     }
 
