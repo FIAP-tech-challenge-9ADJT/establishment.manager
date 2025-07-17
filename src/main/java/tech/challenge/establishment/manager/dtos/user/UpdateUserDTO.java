@@ -4,6 +4,7 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.Size;
 import tech.challenge.establishment.manager.dtos.address.UpdateAddressDTO;
+import tech.challenge.establishment.manager.entities.Address;
 
 public record UpdateUserDTO(
 
@@ -15,5 +16,5 @@ public record UpdateUserDTO(
 
         @Size(min = 6, message = "Password must have at least 6 characters") String password,
 
-        @Valid UpdateAddressDTO address) {
+        Address address) {
 }

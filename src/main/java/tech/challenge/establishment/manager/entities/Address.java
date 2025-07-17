@@ -14,6 +14,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import tech.challenge.establishment.manager.dtos.address.CreateAddressDTO;
 
 @Entity
 @Table(name = "addresses")
@@ -48,4 +49,12 @@ public class Address implements Serializable {
     @JoinColumn(name = "user_id", referencedColumnName = "id", nullable = false, unique = true)
     @JsonManagedReference
     private User user;
+
+    public Address(CreateAddressDTO createAddressDTO) {
+        street = createAddressDTO.street();
+        city = createAddressDTO.city();
+        postalCode = createAddressDTO.postalCode();
+        number = createAddressDTO.number();
+        user = createAddressDTO.user();
+    }
 }
