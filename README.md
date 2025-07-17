@@ -94,3 +94,24 @@ O projeto utiliza um processo de build em múltiplas etapas:
 
 O projeto utiliza MySQL 8.0 com Flyway para migrações. As migrações estão localizadas em `src/main/resources/db/migration`.
 
+## Comando auxliares
+
+- Buildar o projeto sem cache
+```bash
+docker-compose build --no-cache
+```
+
+- Reparar checksums das migrações (`flyway:repair`)
+```bash
+docker run --rm -it \
+  --env-file .env \
+  -v "$PWD":/app \
+  -w /app \
+  --network host \
+  maven:3.9.7-eclipse-temurin-21 \
+  bash -c "chmod +x ./mvnw && ./mvnw flyway:repair \
+    -Dflyway.url=jdbc:mysql://localhost:3306/\$MYSQL_DATABASE \
+    -Dflyway.user=\$MYSQL_USER \
+    -Dflyway.password=\$MYSQL_PASSWORD"
+```
+

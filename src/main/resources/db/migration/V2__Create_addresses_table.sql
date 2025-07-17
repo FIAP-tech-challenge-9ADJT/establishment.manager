@@ -1,6 +1,6 @@
--- V2__create_address_table.sql
+-- V2__create_addresses_table.sql
 
-CREATE TABLE IF NOT EXISTS address (
+CREATE TABLE IF NOT EXISTS addresses (
   id BIGINT AUTO_INCREMENT PRIMARY KEY,
   street VARCHAR(255),
   city VARCHAR(255),
