@@ -7,8 +7,12 @@ import tech.challenge.establishment.manager.dtos.address.UpdateAddressDTO;
 import tech.challenge.establishment.manager.entities.Address;
 import tech.challenge.establishment.manager.services.AddressService;
 
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import tech.challenge.establishment.manager.entities.User;
+import jakarta.validation.Valid;
+
 @RestController
-@RequestMapping("/address")
+@RequestMapping("/addresses")
 public class AddressController {
 
     private final AddressService addressService;
@@ -18,22 +22,25 @@ public class AddressController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Address> findById(@PathVariable Long id) {
+    public ResponseEntity<Address> getById(@PathVariable Long id) {
         return ResponseEntity.ok(addressService.findById(id));
     }
 
-    @PostMapping
-    public ResponseEntity<Address> createAddress(@RequestBody CreateAddressDTO address) {
-        return ResponseEntity.ok(addressService.save(address));
+    @GetMapping("/user/{userId}")
+    public ResponseEntity<Address> getAddressByUserId(@PathVariable Long userId) {
+        return ResponseEntity.ok(addressService.findByUserId(userId));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Address> updateAddress(@PathVariable Long id, @RequestBody UpdateAddressDTO address) {
-        return ResponseEntity.ok(addressService.update(id, address));
+    public ResponseEntity<Address> update(@PathVariable Long id,
+                                          @RequestBody @Valid UpdateAddressDTO dto,
+                                          @AuthenticationPrincipal User authenticatedUser) {
+        return ResponseEntity.ok(addressService.update(id, dto, authenticatedUser));
     }
 
     @DeleteMapping("/{id}")
-    public void deleteAddress(@PathVariable Long id) {
+    public ResponseEntity<Void> delete(@PathVariable Long id) {
         addressService.delete(id);
+        return ResponseEntity.noContent().build();
     }
 }
