@@ -2,12 +2,8 @@ package tech.challenge.establishment.manager.entities;
 
 import java.io.Serial;
 import java.io.Serializable;
-import java.time.LocalDateTime;
 
-import org.hibernate.annotations.CreationTimestamp;
-
-import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -34,18 +30,8 @@ public class Address implements Serializable {
     private String postalCode;
     private String number;
 
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSZ")
-    @CreationTimestamp
-    @Temporal(TemporalType.TIMESTAMP)
-    private LocalDateTime createdAt;
-
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSZ")
-    @CreationTimestamp
-    @Temporal(TemporalType.TIMESTAMP)
-    private LocalDateTime updatedAt;
-
-    @OneToOne(fetch = FetchType.EAGER) 
+    @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id", referencedColumnName = "id", nullable = false, unique = true)
-    @JsonManagedReference
+    @JsonBackReference
     private User user;
 }
