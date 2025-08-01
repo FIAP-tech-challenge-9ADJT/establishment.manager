@@ -27,11 +27,15 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http
                 .authorizeHttpRequests(req -> {
-                    req.requestMatchers("/users/login", "/users").permitAll();
-                    req.requestMatchers(HttpMethod.GET, "/users/**").hasAnyRole("USER", "ADMIN");
+                    req.requestMatchers("/users").permitAll();
+                    req.requestMatchers("/auth/login", "/auth").permitAll();
+                    req.requestMatchers("/admin").permitAll();
+                    req.requestMatchers(HttpMethod.GET, "/admin/**").hasRole("ADMIN");
+                    req.requestMatchers(HttpMethod.PUT, "/admin/**").hasRole("ADMIN");
+                    req.requestMatchers(HttpMethod.DELETE, "/admin/**").hasRole("ADMIN");
+                    req.requestMatchers(HttpMethod.GET, "/users").hasAnyRole("USER", "ADMIN");
                     req.requestMatchers(HttpMethod.PUT, "/users/**").hasAnyRole("USER", "ADMIN");
                     req.requestMatchers(HttpMethod.POST, "/users/change-password").hasAnyRole("USER", "ADMIN");
-                    req.requestMatchers(HttpMethod.DELETE, "/users/**").hasRole("ADMIN");
                     req.requestMatchers(HttpMethod.GET, "/addresses/**").hasAnyRole("USER", "ADMIN");
                     req.requestMatchers(HttpMethod.PUT, "/addresses/**").hasAnyRole("USER", "ADMIN");
                     req.anyRequest().authenticated();

@@ -1,6 +1,5 @@
 package tech.challenge.establishment.manager.services.impl;
 
-import tech.challenge.establishment.manager.dtos.user.ChangePasswordDTO;
 import tech.challenge.establishment.manager.dtos.user.CreateUserDTO;
 import tech.challenge.establishment.manager.dtos.user.UpdateUserDTO;
 import tech.challenge.establishment.manager.entities.Address;
@@ -10,27 +9,27 @@ import tech.challenge.establishment.manager.entities.User;
 import tech.challenge.establishment.manager.repositories.RoleRepository;
 import tech.challenge.establishment.manager.repositories.UserRepository;
 import tech.challenge.establishment.manager.services.AddressService;
-import tech.challenge.establishment.manager.services.UserService;
+import tech.challenge.establishment.manager.services.AdminService;
 import jakarta.persistence.EntityNotFoundException;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 @Service
-public class UserServiceImpl implements UserService {
+public class AdminServiceImpl implements AdminService {
 
     private final UserRepository userRepository;
-    private final AddressService addressService;
-    private final PasswordEncoder passwordEncoder;
     private final RoleRepository roleRepository;
+    private final PasswordEncoder passwordEncoder;
+    private final AddressService addressService;
 
-    public UserServiceImpl(UserRepository userRepository, AddressService addressService,
-                           PasswordEncoder passwordEncoder, RoleRepository roleRepository) {
+    public AdminServiceImpl(UserRepository userRepository, RoleRepository roleRepository, PasswordEncoder passwordEncoder, AddressService addressService) {
         this.userRepository = userRepository;
-        this.addressService = addressService;
-        this.passwordEncoder = passwordEncoder;
         this.roleRepository = roleRepository;
+        this.passwordEncoder = passwordEncoder;
+        this.addressService = addressService;
     }
 
     @Override
@@ -47,7 +46,7 @@ public class UserServiceImpl implements UserService {
         user.setLogin(dto.login());
         user.setPassword(passwordEncoder.encode(dto.password()));
 
-        Role userRole = roleRepository.findByName(RoleName.USER)
+        Role userRole = roleRepository.findByName(RoleName.ADMIN)
                 .orElseThrow(() -> new RuntimeException("Role USER not found in the database"));
 
         user.getRoles().add(userRole);
@@ -67,5 +66,17 @@ public class UserServiceImpl implements UserService {
         user.setEmail(dto.email());
         user.setLogin(dto.login());
         return userRepository.save(user);
+    }
+
+    @Override
+    public void delete(Long id) {
+        if (!userRepository.existsById(id)) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Recurso não encontrado");
+        }
+        try {
+            userRepository.deleteById(id);
+        } catch (DataIntegrityViolationException e) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "Falha de integridade referencial");
+        }
     }
 }

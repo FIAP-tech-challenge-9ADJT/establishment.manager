@@ -13,7 +13,5 @@ public record UpdateUserDTO(
 
         @Size(min = 4, max = 50, message = "Login must have between 4 and 50 characters") String login,
 
-        @Size(min = 6, message = "Password must have at least 6 characters") String password,
-
         @Valid UpdateAddressDTO address) {
 }
