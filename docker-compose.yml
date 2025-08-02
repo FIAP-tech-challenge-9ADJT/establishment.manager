@@ -6,8 +6,6 @@ services:
     restart: unless-stopped
     environment:
       MYSQL_DATABASE: ${MYSQL_DATABASE}
-      MYSQL_USER: ${MYSQL_USER}
-      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
       MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
     ports:
       - "3306:3306"
@@ -15,7 +13,7 @@ services:
       test:
         [
           "CMD-SHELL",
-          "mysqladmin ping -h localhost -u${MYSQL_USER} -p${MYSQL_PASSWORD} || exit 1",
+          "mysqladmin ping -h localhost -uroot -p${MYSQL_ROOT_PASSWORD} || exit 1",
         ]
       interval: 10s
       timeout: 5s
@@ -31,8 +29,8 @@ services:
     environment:
       SPRING_PROFILES_ACTIVE: docker
       MYSQL_DATABASE: ${MYSQL_DATABASE}
-      MYSQL_USER: ${MYSQL_USER}
-      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+      MYSQL_USER: root
+      MYSQL_PASSWORD: ${MYSQL_ROOT_PASSWORD}
     env_file:
       - .env
 
@@ -43,7 +41,7 @@ services:
       - "8081:80"
     environment:
       PMA_HOST: mysql
-      PMA_USER: ${MYSQL_USER}
-      PMA_PASSWORD: ${MYSQL_PASSWORD}
+      PMA_USER: root
+      PMA_PASSWORD: ${MYSQL_ROOT_PASSWORD}
     depends_on:
       - mysql
