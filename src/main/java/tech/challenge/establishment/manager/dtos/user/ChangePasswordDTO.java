@@ -2,7 +2,9 @@ package tech.challenge.establishment.manager.dtos.user;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
+import tech.challenge.establishment.manager.validations.PasswordMatches;
 
+@PasswordMatches(password = "newPassword", confirmPassword = "newPasswordConfirmation")
 public record ChangePasswordDTO(
         @NotBlank(message = "A senha atual é obrigatória")
         String currentPassword,

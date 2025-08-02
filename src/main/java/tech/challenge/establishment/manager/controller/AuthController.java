@@ -23,14 +23,15 @@ public class AuthController {
     private final AuthenticationManager authenticationManager;
     private final TokenService tokenService;
 
-    public AuthController(AuthService authService, AuthenticationManager authenticationManager, TokenService tokenService) {
+    public AuthController(AuthService authService, AuthenticationManager authenticationManager,
+            TokenService tokenService) {
         this.authService = authService;
         this.authenticationManager = authenticationManager;
         this.tokenService = tokenService;
     }
 
     @PostMapping("/login")
-    public ResponseEntity<String> login(@RequestBody LoginUserDTO dto) {
+    public ResponseEntity<String> login(@Valid @RequestBody LoginUserDTO dto) {
         var authenticationToken = new UsernamePasswordAuthenticationToken(dto.login(), dto.password());
         var authentication = authenticationManager.authenticate(authenticationToken);
         String accessToken = tokenService.generateToken((User) authentication.getPrincipal());
@@ -38,8 +39,8 @@ public class AuthController {
     }
 
     @PostMapping("/change-password")
-    public ResponseEntity<Void> changePassword(@RequestBody @Valid ChangePasswordDTO dto,
-                                               @AuthenticationPrincipal User authenticatedUser) {
+    public ResponseEntity<Void> changePassword(@Valid @RequestBody ChangePasswordDTO dto,
+            @AuthenticationPrincipal User authenticatedUser) {
         authService.changePassword(authenticatedUser.getId(), dto);
         return ResponseEntity.noContent().build();
     }

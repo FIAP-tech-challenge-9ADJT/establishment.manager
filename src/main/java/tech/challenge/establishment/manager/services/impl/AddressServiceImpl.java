@@ -7,7 +7,8 @@ import tech.challenge.establishment.manager.entities.Address;
 import tech.challenge.establishment.manager.entities.User;
 import tech.challenge.establishment.manager.repositories.AddressRepository;
 import tech.challenge.establishment.manager.services.AddressService;
-import jakarta.persistence.EntityNotFoundException;
+import tech.challenge.establishment.manager.exceptions.ResourceNotFoundException;
+import tech.challenge.establishment.manager.exceptions.UnauthorizedException;
 
 @Service
 public class AddressServiceImpl implements AddressService {
@@ -21,13 +22,13 @@ public class AddressServiceImpl implements AddressService {
     @Override
     public Address findById(Long id) {
         return addressRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Address not found with id " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("Endereço não encontrado com ID: " + id));
     }
 
     @Override
     public Address findByUserId(Long userId) {
         return addressRepository.findByUserId(userId)
-                .orElseThrow(() -> new EntityNotFoundException("Address for User ID " + userId + " not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Endereço não encontrado para o usuário com ID: " + userId));
     }
 
     @Override
@@ -46,7 +47,7 @@ public class AddressServiceImpl implements AddressService {
         Address address = findById(id);
 
         if (!address.getUser().getId().equals(authenticatedUser.getId())) {
-            throw new RuntimeException("Você não tem permissão para alterar este endereço.");
+            throw new UnauthorizedException("Você não tem permissão para alterar este endereço");
         }
 
         if (dto.street() != null) address.setStreet(dto.street());

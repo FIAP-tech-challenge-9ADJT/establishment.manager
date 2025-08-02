@@ -10,12 +10,12 @@ import tech.challenge.establishment.manager.repositories.RoleRepository;
 import tech.challenge.establishment.manager.repositories.UserRepository;
 import tech.challenge.establishment.manager.services.AddressService;
 import tech.challenge.establishment.manager.services.AdminService;
-import jakarta.persistence.EntityNotFoundException;
 import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.web.server.ResponseStatusException;
+import tech.challenge.establishment.manager.exceptions.ResourceNotFoundException;
+import tech.challenge.establishment.manager.exceptions.BusinessRuleException;
+import tech.challenge.establishment.manager.exceptions.DataConflictException;
 
 @Service
 public class AdminServiceImpl implements AdminService {
@@ -35,7 +35,7 @@ public class AdminServiceImpl implements AdminService {
     @Override
     public User findById(Long id) {
         return userRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("User not found with id: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("Usuário não encontrado com ID: " + id));
     }
 
     @Override
@@ -47,7 +47,7 @@ public class AdminServiceImpl implements AdminService {
         user.setPassword(passwordEncoder.encode(dto.password()));
 
         Role userRole = roleRepository.findByName(RoleName.ADMIN)
-                .orElseThrow(() -> new RuntimeException("Role USER not found in the database"));
+                .orElseThrow(() -> new BusinessRuleException("Role ADMIN não encontrada no banco de dados"));
 
         user.getRoles().add(userRole);
 
@@ -71,12 +71,12 @@ public class AdminServiceImpl implements AdminService {
     @Override
     public void delete(Long id) {
         if (!userRepository.existsById(id)) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Recurso não encontrado");
+            throw new ResourceNotFoundException("Usuário não encontrado com ID: " + id);
         }
         try {
             userRepository.deleteById(id);
         } catch (DataIntegrityViolationException e) {
-            throw new ResponseStatusException(HttpStatus.CONFLICT, "Falha de integridade referencial");
+            throw new DataConflictException("Não é possível excluir o usuário devido a dependências existentes");
         }
     }
 }

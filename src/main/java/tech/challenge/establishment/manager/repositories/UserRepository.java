@@ -6,4 +6,6 @@ import tech.challenge.establishment.manager.entities.User;
 
 public interface UserRepository extends JpaRepository<User, Long> {
     Optional<User> findByLogin(String login);
+    boolean existsByEmail(String email);
+    boolean existsByLogin(String login);
 }

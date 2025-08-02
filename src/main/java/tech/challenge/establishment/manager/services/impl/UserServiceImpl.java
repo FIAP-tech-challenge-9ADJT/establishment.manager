@@ -10,9 +10,10 @@ import tech.challenge.establishment.manager.repositories.RoleRepository;
 import tech.challenge.establishment.manager.repositories.UserRepository;
 import tech.challenge.establishment.manager.services.AddressService;
 import tech.challenge.establishment.manager.services.UserService;
-import jakarta.persistence.EntityNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import tech.challenge.establishment.manager.exceptions.ResourceNotFoundException;
+import tech.challenge.establishment.manager.exceptions.BusinessRuleException;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -33,7 +34,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public User findById(Long id) {
         return userRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("User not found with id: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("Usuário não encontrado com ID: " + id));
     }
 
     @Override
@@ -45,7 +46,7 @@ public class UserServiceImpl implements UserService {
         user.setPassword(passwordEncoder.encode(dto.password()));
 
         Role userRole = roleRepository.findByName(RoleName.USER)
-                .orElseThrow(() -> new RuntimeException("Role USER not found in the database"));
+                .orElseThrow(() -> new BusinessRuleException("Role USER não encontrada no banco de dados"));
 
         user.getRoles().add(userRole);
 
