@@ -26,24 +26,24 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http
-                .authorizeHttpRequests(req -> {
-                    req.requestMatchers("/users").permitAll();
-                    req.requestMatchers("/auth/login", "/auth").permitAll();
-                    req.requestMatchers("/admin").permitAll();
-                    req.requestMatchers(HttpMethod.GET, "/admin/**").hasRole("ADMIN");
-                    req.requestMatchers(HttpMethod.PUT, "/admin/**").hasRole("ADMIN");
-                    req.requestMatchers(HttpMethod.DELETE, "/admin/**").hasRole("ADMIN");
-                    req.requestMatchers(HttpMethod.GET, "/users").hasAnyRole("USER", "ADMIN");
-                    req.requestMatchers(HttpMethod.PUT, "/users/**").hasAnyRole("USER", "ADMIN");
-                    req.requestMatchers(HttpMethod.POST, "/users/change-password").hasAnyRole("USER", "ADMIN");
-                    req.requestMatchers(HttpMethod.GET, "/addresses/**").hasAnyRole("USER", "ADMIN");
-                    req.requestMatchers(HttpMethod.PUT, "/addresses/**").hasAnyRole("USER", "ADMIN");
-                    req.anyRequest().authenticated();
-                })
-                .sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .csrf(csrf -> csrf.disable())
-                .addFilterBefore(accessTokenFilter, UsernamePasswordAuthenticationFilter.class)
-                .build();
+            .authorizeHttpRequests(req -> {
+                req.requestMatchers(HttpMethod.POST, "/users").permitAll(); // cadastro de usuário
+                req.requestMatchers("/auth/login", "/auth").permitAll();
+                req.requestMatchers("/admin").permitAll();
+                req.requestMatchers(HttpMethod.GET, "/admin/**").hasRole("ADMIN");
+                req.requestMatchers(HttpMethod.PUT, "/admin/**").hasRole("ADMIN");
+                req.requestMatchers(HttpMethod.DELETE, "/admin/**").hasRole("ADMIN");
+                req.requestMatchers(HttpMethod.GET, "/users").hasAnyRole("USER", "ADMIN");
+                req.requestMatchers(HttpMethod.PUT, "/users/**").hasAnyRole("USER", "ADMIN");
+                req.requestMatchers(HttpMethod.POST, "/users/change-password").hasAnyRole("USER", "ADMIN");
+                req.requestMatchers(HttpMethod.GET, "/users/address").hasAnyRole("USER", "ADMIN");
+                req.requestMatchers(HttpMethod.PUT, "/users/address").hasAnyRole("USER", "ADMIN");
+                req.anyRequest().authenticated();
+            })
+            .sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+            .csrf(csrf -> csrf.disable())
+            .addFilterBefore(accessTokenFilter, UsernamePasswordAuthenticationFilter.class)
+            .build();
     }
 
     @Bean
@@ -55,5 +55,4 @@ public class SecurityConfig {
     public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
         return authenticationConfiguration.getAuthenticationManager();
     }
-
 }
