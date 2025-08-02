@@ -1,6 +1,7 @@
 package tech.challenge.establishment.manager.exceptions.handlers;
 
 import jakarta.servlet.http.HttpServletRequest;
+import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -9,6 +10,7 @@ import org.springframework.web.servlet.resource.NoResourceFoundException;
 import tech.challenge.establishment.manager.dtos.error.ErrorResponseDTO;
 
 @RestControllerAdvice
+@Order(Integer.MAX_VALUE) // Lowest priority - will be executed last
 public class GeneralExceptionHandler {
 
     @ExceptionHandler(NoResourceFoundException.class)

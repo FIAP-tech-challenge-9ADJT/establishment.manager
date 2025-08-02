@@ -1,6 +1,7 @@
 package tech.challenge.establishment.manager.exceptions.handlers;
 
 import jakarta.servlet.http.HttpServletRequest;
+import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -15,6 +16,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @RestControllerAdvice
+@Order(1) // High priority - will be executed first
 public class ValidationExceptionHandler {
 
     @ExceptionHandler(BusinessRuleException.class)
