@@ -1,7 +1,6 @@
 package tech.challenge.establishment.manager.entities;
 
 import java.io.Serial;
-import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -27,7 +26,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class User implements Serializable, UserDetails {
+public class User implements UserDetails {
     @Serial
     private static final long serialVersionUID = 1L;
 
@@ -53,9 +52,7 @@ public class User implements Serializable, UserDetails {
     private Address address;
 
     @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(name = "tb_user_role",
-            joinColumns = @JoinColumn(name = "user_id"),
-            inverseJoinColumns =  @JoinColumn(name = "role_id"))
+    @JoinTable(name = "tb_user_role", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "role_id"))
     private List<Role> roles = new ArrayList<>();
 
     @PrePersist

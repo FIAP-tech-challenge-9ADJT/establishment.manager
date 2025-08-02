@@ -1,6 +1,5 @@
 package tech.challenge.establishment.manager.services.impl;
 
-import tech.challenge.establishment.manager.dtos.user.ChangePasswordDTO;
 import tech.challenge.establishment.manager.dtos.user.CreateUserDTO;
 import tech.challenge.establishment.manager.dtos.user.UpdateUserDTO;
 import tech.challenge.establishment.manager.entities.Address;
@@ -12,8 +11,6 @@ import tech.challenge.establishment.manager.repositories.UserRepository;
 import tech.challenge.establishment.manager.services.AddressService;
 import tech.challenge.establishment.manager.services.UserService;
 import jakarta.persistence.EntityNotFoundException;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
