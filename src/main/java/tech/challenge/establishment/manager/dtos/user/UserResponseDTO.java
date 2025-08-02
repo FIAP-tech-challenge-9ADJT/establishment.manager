@@ -1,7 +1,7 @@
 package tech.challenge.establishment.manager.dtos.user;
 
-import tech.challenge.establishment.manager.entities.Address;
-import tech.challenge.establishment.manager.entities.Role;
+import tech.challenge.establishment.manager.dtos.address.AddressResponseDTO;
+import tech.challenge.establishment.manager.dtos.role.RoleResponseDTO;
 import tech.challenge.establishment.manager.entities.User;
 
 import java.time.LocalDateTime;
@@ -14,8 +14,8 @@ public record UserResponseDTO(
         String login,
         LocalDateTime createdAt,
         LocalDateTime updatedAt,
-        Address address,
-        List<Role> roles
+        AddressResponseDTO address,
+        List<RoleResponseDTO> roles
 ) {
     public static UserResponseDTO from(User user) {
         return new UserResponseDTO(
@@ -25,8 +25,8 @@ public record UserResponseDTO(
                 user.getLogin(),
                 user.getCreatedAt(),
                 user.getUpdatedAt(),
-                user.getAddress(),
-                user.getRoles()
+                user.getAddress() != null ? AddressResponseDTO.from(user.getAddress()) : null,
+                user.getRoles().stream().map(RoleResponseDTO::from).toList()
         );
     }
 }

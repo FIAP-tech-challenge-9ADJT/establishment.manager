@@ -1,5 +1,6 @@
 package tech.challenge.establishment.manager.controller;
 
+import tech.challenge.establishment.manager.dtos.auth.LoginResponseDTO;
 import tech.challenge.establishment.manager.dtos.user.ChangePasswordDTO;
 import tech.challenge.establishment.manager.dtos.user.LoginUserDTO;
 import tech.challenge.establishment.manager.entities.User;
@@ -31,11 +32,11 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<String> login(@Valid @RequestBody LoginUserDTO dto) {
+    public ResponseEntity<LoginResponseDTO> login(@Valid @RequestBody LoginUserDTO dto) {
         var authenticationToken = new UsernamePasswordAuthenticationToken(dto.login(), dto.password());
         var authentication = authenticationManager.authenticate(authenticationToken);
         String accessToken = tokenService.generateToken((User) authentication.getPrincipal());
-        return ResponseEntity.ok(accessToken);
+        return ResponseEntity.ok(LoginResponseDTO.of(accessToken));
     }
 
     @PostMapping("/change-password")

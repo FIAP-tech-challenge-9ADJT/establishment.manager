@@ -11,6 +11,7 @@ import tech.challenge.establishment.manager.dtos.user.CreateUserDTO;
 import tech.challenge.establishment.manager.dtos.user.UpdateUserDTO;
 import tech.challenge.establishment.manager.dtos.user.UserResponseDTO;
 
+import tech.challenge.establishment.manager.dtos.address.AddressResponseDTO;
 import tech.challenge.establishment.manager.dtos.address.UpdateAddressDTO;
 import tech.challenge.establishment.manager.entities.Address;
 import tech.challenge.establishment.manager.entities.User;
@@ -52,14 +53,16 @@ public class UserController {
     // ADDRESS
 
     @GetMapping("/address")
-    public ResponseEntity<Address> getAddress(@AuthenticationPrincipal User authenticatedUser) {
-        return ResponseEntity.ok(addressService.findByUserId(authenticatedUser.getId()));
+    public ResponseEntity<AddressResponseDTO> getAddress(@AuthenticationPrincipal User authenticatedUser) {
+        Address address = addressService.findByUserId(authenticatedUser.getId());
+        return ResponseEntity.ok(AddressResponseDTO.from(address));
     }
 
     @PutMapping("/address")
-    public ResponseEntity<Address> updateAddress(@AuthenticationPrincipal User authenticatedUser,
+    public ResponseEntity<AddressResponseDTO> updateAddress(@AuthenticationPrincipal User authenticatedUser,
             @RequestBody @Valid UpdateAddressDTO dto) {
         Address address = addressService.findByUserId(authenticatedUser.getId());
-        return ResponseEntity.ok(addressService.update(address.getId(), dto, authenticatedUser));
+        Address updatedAddress = addressService.update(address.getId(), dto, authenticatedUser);
+        return ResponseEntity.ok(AddressResponseDTO.from(updatedAddress));
     }
 }
