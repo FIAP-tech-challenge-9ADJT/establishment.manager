@@ -40,8 +40,11 @@ public class UserController {
         this.tokenService = tokenService;
     }
 
+<<<<<<< HEAD
     // USER
 
+=======
+>>>>>>> origin/main
     @GetMapping
     public ResponseEntity<UserResponseDTO> findById(@AuthenticationPrincipal User authenticatedUser) {
         return ResponseEntity.ok(UserResponseDTO.from(userService.findById(authenticatedUser.getId())));
@@ -53,6 +56,7 @@ public class UserController {
     }
 
     @PutMapping
+<<<<<<< HEAD
     public ResponseEntity<UserResponseDTO> update(@AuthenticationPrincipal User authenticatedUser,
                                                   @RequestBody @Valid UpdateUserDTO dto) {
         return ResponseEntity.ok(UserResponseDTO.from(userService.update(authenticatedUser.getId(), dto)));
@@ -72,3 +76,9 @@ public class UserController {
         return ResponseEntity.ok(addressService.update(address.getId(), dto, authenticatedUser));
     }
 }
+=======
+    public ResponseEntity<UserResponseDTO> update(@AuthenticationPrincipal User authenticatedUser, @RequestBody @Valid UpdateUserDTO dto) {
+        return ResponseEntity.ok(UserResponseDTO.from(userService.update(authenticatedUser.getId(), dto)));
+    }
+}  
+>>>>>>> origin/main
