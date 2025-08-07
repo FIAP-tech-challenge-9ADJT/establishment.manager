@@ -38,6 +38,7 @@ public class SecurityConfig {
                 req.requestMatchers(HttpMethod.POST, "/users/change-password").hasAnyRole("USER", "ADMIN");
                 req.requestMatchers(HttpMethod.GET, "/users/address").hasAnyRole("USER", "ADMIN");
                 req.requestMatchers(HttpMethod.PUT, "/users/address").hasAnyRole("USER", "ADMIN");
+                req.requestMatchers("/v3/api-docs/**", "/swagger-ui.html", "/swagger-ui/**", "/swagger-resources/**", "/webjars/**").permitAll();
                 req.anyRequest().authenticated();
             })
             .sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
