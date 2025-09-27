@@ -8,8 +8,8 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
-import tech.challenge.establishment.manager.dtos.error.ErrorResponseDTO;
-import tech.challenge.establishment.manager.dtos.error.FieldErrorDTO;
+import tech.challenge.establishment.manager.presentation.dtos.error.ErrorResponseDTO;
+import tech.challenge.establishment.manager.presentation.dtos.error.FieldErrorDTO;
 import tech.challenge.establishment.manager.exceptions.BusinessRuleException;
 
 import java.util.List;

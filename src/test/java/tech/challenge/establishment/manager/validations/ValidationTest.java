@@ -5,8 +5,8 @@ import jakarta.validation.Validator;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import tech.challenge.establishment.manager.dtos.address.CreateAddressDTO;
-import tech.challenge.establishment.manager.dtos.user.ChangePasswordDTO;
+import tech.challenge.establishment.manager.presentation.dtos.address.CreateAddressDTO;
+import tech.challenge.establishment.manager.presentation.dtos.user.ChangePasswordDTO;
 import tech.challenge.establishment.manager.validations.validators.ValidCPFValidator;
 import tech.challenge.establishment.manager.validations.validators.ValidPhoneValidator;
 
