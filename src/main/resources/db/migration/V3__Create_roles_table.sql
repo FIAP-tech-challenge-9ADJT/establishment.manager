@@ -14,4 +14,5 @@ CREATE TABLE IF NOT EXISTS tb_user_role (
 );
 
 INSERT INTO tb_role (name) VALUES ('USER');
+INSERT INTO tb_role (name) VALUES ('RESTAURANT_OWNER');
 INSERT INTO tb_role (name) VALUES ('ADMIN');

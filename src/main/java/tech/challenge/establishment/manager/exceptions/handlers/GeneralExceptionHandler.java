@@ -7,7 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.servlet.resource.NoResourceFoundException;
-import tech.challenge.establishment.manager.dtos.error.ErrorResponseDTO;
+import tech.challenge.establishment.manager.presentation.dtos.error.ErrorResponseDTO;
 
 @RestControllerAdvice
 @Order(Integer.MAX_VALUE) // Lowest priority - will be executed last
@@ -28,10 +28,13 @@ public class GeneralExceptionHandler {
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorResponseDTO> handleGeneral(
             Exception ex, HttpServletRequest request) {
+        // Log the actual exception for debugging
+        ex.printStackTrace();
+        
         ErrorResponseDTO error = ErrorResponseDTO.of(
                 HttpStatus.INTERNAL_SERVER_ERROR.value(),
                 "Internal Server Error",
-                "Ocorreu um erro interno no servidor",
+                "Erro interno: " + ex.getClass().getSimpleName() + " - " + ex.getMessage(),
                 request.getRequestURI()
         );
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(error);

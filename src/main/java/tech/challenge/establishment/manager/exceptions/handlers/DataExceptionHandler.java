@@ -7,7 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-import tech.challenge.establishment.manager.dtos.error.ErrorResponseDTO;
+import tech.challenge.establishment.manager.presentation.dtos.error.ErrorResponseDTO;
 import tech.challenge.establishment.manager.exceptions.DataConflictException;
 import tech.challenge.establishment.manager.exceptions.ResourceNotFoundException;
 

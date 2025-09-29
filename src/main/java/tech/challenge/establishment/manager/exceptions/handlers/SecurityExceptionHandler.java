@@ -9,7 +9,7 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-import tech.challenge.establishment.manager.dtos.error.ErrorResponseDTO;
+import tech.challenge.establishment.manager.presentation.dtos.error.ErrorResponseDTO;
 import tech.challenge.establishment.manager.exceptions.UnauthorizedException;
 
 @RestControllerAdvice

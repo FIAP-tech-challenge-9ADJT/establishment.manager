@@ -3,7 +3,7 @@ package tech.challenge.establishment.manager.validations.validators;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
 import org.springframework.stereotype.Component;
-import tech.challenge.establishment.manager.dtos.user.ChangePasswordDTO;
+import tech.challenge.establishment.manager.presentation.dtos.user.ChangePasswordDTO;
 import tech.challenge.establishment.manager.validations.PasswordMatches;
 
 import java.lang.reflect.Field;
