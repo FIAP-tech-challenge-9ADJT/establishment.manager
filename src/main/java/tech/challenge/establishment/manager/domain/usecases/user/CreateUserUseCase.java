@@ -19,7 +19,7 @@ public class CreateUserUseCase {
         this.roleRepository = roleRepository;
     }
     
-    public User execute(String name, String email, String login, String password, Address address) {
+    public User execute(String name, String email, String login, String password, Address address, Role.RoleName roleName) {
         // Validar se email já existe
         if (userRepository.existsByEmail(Email.of(email))) {
             throw new UserAlreadyExistsException("email", email);
@@ -33,13 +33,12 @@ public class CreateUserUseCase {
         // Criar usuário
         User user = User.create(name, email, login, password, address);
         
-        // Adicionar role padrão USER
-        Role userRole = roleRepository.findByName(Role.RoleName.USER)
-            .orElseThrow(() -> new RuntimeException("Default USER role not found"));
+        // Adicionar a role especificada
+        Role role = roleRepository.findByName(roleName)
+            .orElseThrow(() -> new RuntimeException("Role não encontrada: " + roleName));
         
-        user = user.addRole(userRole);
+        user = user.addRole(role);
         
-        // Salvar usuário
         return userRepository.save(user);
     }
 }

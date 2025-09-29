@@ -31,18 +31,35 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http
             .authorizeHttpRequests(req -> {
-                req.requestMatchers(HttpMethod.POST, "/users").permitAll(); // cadastro de usuário
+
+                // ENDPOINTS PÚBLICOS - criação de usuários
+                req.requestMatchers(HttpMethod.POST, "/users").permitAll();
+                req.requestMatchers(HttpMethod.POST, "/restaurant-owners").permitAll();
+                req.requestMatchers(HttpMethod.POST, "/admin").permitAll();
                 req.requestMatchers("/auth/login", "/auth").permitAll();
-                req.requestMatchers("/admin").permitAll();
+                req.requestMatchers("/v3/api-docs/**", "/swagger-ui.html", "/swagger-ui/**",
+                                "/swagger-resources/**", "/webjars/**").permitAll();
+
+                // ADMIN
                 req.requestMatchers(HttpMethod.GET, "/admin/**").hasRole("ADMIN");
                 req.requestMatchers(HttpMethod.PUT, "/admin/**").hasRole("ADMIN");
                 req.requestMatchers(HttpMethod.DELETE, "/admin/**").hasRole("ADMIN");
+
+                // USUÁRIO (CUSTOMER)
                 req.requestMatchers(HttpMethod.GET, "/users").hasAnyRole("USER", "ADMIN");
                 req.requestMatchers(HttpMethod.PUT, "/users/**").hasAnyRole("USER", "ADMIN");
                 req.requestMatchers(HttpMethod.POST, "/users/change-password").hasAnyRole("USER", "ADMIN");
                 req.requestMatchers(HttpMethod.GET, "/users/address").hasAnyRole("USER", "ADMIN");
                 req.requestMatchers(HttpMethod.PUT, "/users/address").hasAnyRole("USER", "ADMIN");
-                req.requestMatchers("/v3/api-docs/**", "/swagger-ui.html", "/swagger-ui/**", "/swagger-resources/**", "/webjars/**").permitAll();
+
+                // DONO DO RESTAURANTE (RESTAURANT_OWNER)
+                req.requestMatchers(HttpMethod.GET, "/restaurant-owners/**").hasAnyRole("RESTAURANT_OWNER", "ADMIN");
+                req.requestMatchers(HttpMethod.PUT, "/restaurant-owners/**").hasAnyRole("RESTAURANT_OWNER", "ADMIN");
+                req.requestMatchers(HttpMethod.POST, "/restaurant-owners/**").hasAnyRole("RESTAURANT_OWNER", "ADMIN");
+                req.requestMatchers(HttpMethod.GET, "/restaurant-owners/address").hasAnyRole("RESTAURANT_OWNER", "ADMIN");
+                req.requestMatchers(HttpMethod.PUT, "/restaurant-owners/address").hasAnyRole("RESTAURANT_OWNER", "ADMIN");
+
+                // QUALQUER OUTRO REQUER AUTENTICAÇÃO
                 req.anyRequest().authenticated();
             })
             .sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
@@ -52,7 +69,7 @@ public class SecurityConfig {
     }
 
     @Bean
-    public PasswordEncoder passwordEncoder(){
+    public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 

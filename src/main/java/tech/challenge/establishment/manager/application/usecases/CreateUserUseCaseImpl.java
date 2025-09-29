@@ -14,41 +14,31 @@ import tech.challenge.establishment.manager.domain.valueobjects.Login;
 
 @Service
 public class CreateUserUseCaseImpl extends CreateUserUseCase {
-    
+
     private final PasswordEncoder passwordEncoder;
-    
+
     public CreateUserUseCaseImpl(UserRepository userRepository, 
-                                RoleRepository roleRepository,
-                                PasswordEncoder passwordEncoder) {
+                                 RoleRepository roleRepository,
+                                 PasswordEncoder passwordEncoder) {
         super(userRepository, roleRepository);
         this.passwordEncoder = passwordEncoder;
     }
-    
-    @Override
-    public User execute(String name, String email, String login, String password, Address address) {
-        // Validar se email já existe
+
+    public User execute(String name, String email, String login, String password, Address address, Role.RoleName roleName) {
         if (super.userRepository.existsByEmail(Email.of(email))) {
             throw new UserAlreadyExistsException("email", email);
         }
-        
-        // Validar se login já existe
         if (super.userRepository.existsByLogin(Login.of(login))) {
             throw new UserAlreadyExistsException("login", login);
         }
-        
-        // Codificar senha
+
         String encodedPassword = passwordEncoder.encode(password);
-        
-        // Criar usuário
+
         User user = User.create(name, email, login, encodedPassword, address);
-        
-        // Adicionar role padrão USER
-        Role userRole = super.roleRepository.findByName(Role.RoleName.USER)
-            .orElseThrow(() -> new RuntimeException("Default USER role not found"));
-        
-        user = user.addRole(userRole);
-        
-        // Salvar usuário
+
+        Role role = super.roleRepository.findByName(roleName)
+                .orElseThrow(() -> new RuntimeException("Role '" + roleName + "' not found in DB. Check RoleRepository."));
+        user = user.addRole(role);
         return super.userRepository.save(user);
     }
 }

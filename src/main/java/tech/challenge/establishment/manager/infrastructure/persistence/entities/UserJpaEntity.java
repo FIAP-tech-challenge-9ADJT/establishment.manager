@@ -2,9 +2,9 @@ package tech.challenge.establishment.manager.infrastructure.persistence.entities
 
 import java.io.Serial;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
@@ -52,8 +52,12 @@ public class UserJpaEntity implements UserDetails {
     private AddressJpaEntity address;
 
     @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(name = "tb_user_role", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "role_id"))
-    private List<RoleJpaEntity> roles = new ArrayList<>();
+    @JoinTable(
+        name = "tb_user_role",
+        joinColumns = @JoinColumn(name = "user_id"),
+        inverseJoinColumns = @JoinColumn(name = "role_id")
+    )
+    private Set<RoleJpaEntity> roles = new HashSet<>();
 
     @PrePersist
     public void prePersist() {
@@ -71,6 +75,7 @@ public class UserJpaEntity implements UserDetails {
         return roles;
     }
 
+    @Override
     public String getPassword() {
         return password;
     }
@@ -78,5 +83,25 @@ public class UserJpaEntity implements UserDetails {
     @Override
     public String getUsername() {
         return login;
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return true;
     }
 }

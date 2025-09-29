@@ -2,6 +2,8 @@ package tech.challenge.establishment.manager.infrastructure.persistence.entities
 
 import jakarta.persistence.*;
 import org.springframework.security.core.GrantedAuthority;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "tb_role")
@@ -14,8 +16,13 @@ public class RoleJpaEntity implements GrantedAuthority {
     @Enumerated(EnumType.STRING)
     private RoleName name;
 
+    @ManyToMany(mappedBy = "roles")
+    private Set<UserJpaEntity> users = new HashSet<>();
+
     public enum RoleName {
-        USER, ADMIN
+        USER,
+        RESTAURANT_OWNER,
+        ADMIN
     }
 
     @Override
@@ -37,5 +44,13 @@ public class RoleJpaEntity implements GrantedAuthority {
 
     public void setName(RoleName name) {
         this.name = name;
+    }
+
+    public Set<UserJpaEntity> getUsers() {
+        return users;
+    }
+
+    public void setUsers(Set<UserJpaEntity> users) {
+        this.users = users;
     }
 }

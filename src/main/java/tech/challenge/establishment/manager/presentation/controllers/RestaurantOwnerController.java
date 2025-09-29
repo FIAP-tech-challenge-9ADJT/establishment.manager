@@ -17,18 +17,19 @@ import tech.challenge.establishment.manager.infrastructure.persistence.entities.
 import tech.challenge.establishment.manager.application.services.UserApplicationService;
 import tech.challenge.establishment.manager.domain.repositories.AddressRepository;
 import tech.challenge.establishment.manager.domain.valueobjects.UserId;
+import tech.challenge.establishment.manager.domain.valueobjects.AddressId;
 import tech.challenge.establishment.manager.domain.valueobjects.PostalCode;
 import tech.challenge.establishment.manager.domain.entities.Address;
 
 @RestController
-@RequestMapping("/users")
-public class UserController {
+@RequestMapping("/restaurant-owners")
+public class RestaurantOwnerController {
 
     private final UserApplicationService userApplicationService;
     private final AddressRepository addressRepository;
 
-    public UserController(UserApplicationService userApplicationService,
-                          AddressRepository addressRepository) {
+    public RestaurantOwnerController(UserApplicationService userApplicationService,
+                                     AddressRepository addressRepository) {
         this.userApplicationService = userApplicationService;
         this.addressRepository = addressRepository;
     }
@@ -40,12 +41,12 @@ public class UserController {
     }
 
     @PostMapping
-    public ResponseEntity<UserResponseDTO> createUser(@Valid @RequestBody CreateUserDTO dto) {
+    public ResponseEntity<UserResponseDTO> createRestaurantOwner(@Valid @RequestBody CreateUserDTO dto) {
         Address address = null;
         if (dto.address() != null) {
             address = AddressDtoMapper.fromCreateDto(dto.address());
         }
-        var user = userApplicationService.createCustomer(
+        var user = userApplicationService.createRestaurantOwner(
                 dto.name(),
                 dto.email(),
                 dto.login(),
@@ -76,19 +77,23 @@ public class UserController {
     @PostMapping("/address")
     public ResponseEntity<AddressResponseDTO> createAddress(@Valid @RequestBody CreateAddressDTO dto,
                                                             @AuthenticationPrincipal UserJpaEntity authenticatedUser) {
+        var existingAddress = addressRepository.findByUserId(UserId.of(authenticatedUser.getId()));
+        if (existingAddress.isPresent()) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).build();
+        }
         var address = AddressDtoMapper.fromCreateDto(dto, UserId.of(authenticatedUser.getId()));
         var savedAddress = addressRepository.save(address);
         return ResponseEntity.status(HttpStatus.CREATED).body(AddressDtoMapper.toResponseDto(savedAddress));
     }
 
     @PutMapping("/address")
-    public ResponseEntity<AddressResponseDTO> updateAddress(@AuthenticationPrincipal UserJpaEntity authenticatedUser,
-                                                            @RequestBody @Valid UpdateAddressDTO dto) {
+    public ResponseEntity<AddressResponseDTO> updateAddress(@Valid @RequestBody UpdateAddressDTO dto,
+                                                            @AuthenticationPrincipal UserJpaEntity authenticatedUser) {
         var existingAddress = addressRepository.findByUserId(UserId.of(authenticatedUser.getId()));
         if (existingAddress.isPresent()) {
             Address oldAddress = existingAddress.get();
             Address updatedAddress = new Address(
-                oldAddress.getId(),
+                oldAddress.getId(), // AddressId
                 dto.street(),
                 dto.city(),
                 new PostalCode(dto.postalCode()),
