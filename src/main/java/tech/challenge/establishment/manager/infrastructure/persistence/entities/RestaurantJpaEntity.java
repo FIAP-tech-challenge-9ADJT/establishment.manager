@@ -31,6 +31,6 @@ public class RestaurantJpaEntity {
     private UserJpaEntity owner;
 
     @OneToOne(mappedBy = "restaurant", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
-    private RestaurantAddressJpaEntity endereco;
+    private RestaurantAddressJpaEntity address;
 
 }
