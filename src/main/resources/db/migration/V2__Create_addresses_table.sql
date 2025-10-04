@@ -1,0 +1,15 @@
+-- V2__create_addresses_table.sql
+
+CREATE TABLE IF NOT EXISTS addresses (
+  id BIGINT AUTO_INCREMENT PRIMARY KEY,
+  street VARCHAR(255),
+  city VARCHAR(255),
+  postal_code VARCHAR(50),
+  number VARCHAR(10),
+  user_id BIGINT NOT NULL,
+  created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  CONSTRAINT fk_address_user FOREIGN KEY (user_id)
+    REFERENCES users(id)
+    ON DELETE CASCADE
+);
