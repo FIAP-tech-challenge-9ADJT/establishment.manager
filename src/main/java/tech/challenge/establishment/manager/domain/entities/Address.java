@@ -60,9 +60,12 @@ public class Address {
     public int hashCode() {
         return Objects.hash(id);
     }
+<<<<<<< HEAD
 
     @Override
     public String toString() {
         return street + ", " + number + " - " + city + " (" + postalCode.value() + ")";
     }
+=======
+>>>>>>> origin/main
 }

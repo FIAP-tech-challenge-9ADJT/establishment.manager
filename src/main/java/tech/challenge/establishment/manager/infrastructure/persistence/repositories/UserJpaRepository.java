@@ -9,5 +9,8 @@ public interface UserJpaRepository extends JpaRepository<UserJpaEntity, Long> {
     Optional<UserJpaEntity> findByLogin(String login);
     boolean existsByEmail(String email);
     boolean existsByLogin(String login);
+<<<<<<< HEAD
     boolean existsById(Long id);
+=======
+>>>>>>> origin/main
 }

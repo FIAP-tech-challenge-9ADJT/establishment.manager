@@ -52,9 +52,12 @@ public class UserRepositoryImpl implements UserRepository {
     public boolean existsByLogin(Login login) {
         return userJpaRepository.existsByLogin(login.value());
     }
+<<<<<<< HEAD
 
     @Override
     public boolean existsById(UserId id) {
         return userJpaRepository.existsById(id.value());
     }
+=======
+>>>>>>> origin/main
 }

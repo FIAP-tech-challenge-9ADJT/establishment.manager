@@ -3,7 +3,10 @@ package tech.challenge.establishment.manager.infrastructure.persistence.mappers;
 import tech.challenge.establishment.manager.domain.entities.Address;
 import tech.challenge.establishment.manager.domain.valueobjects.UserId;
 import tech.challenge.establishment.manager.infrastructure.persistence.entities.AddressJpaEntity;
+<<<<<<< HEAD
 import tech.challenge.establishment.manager.infrastructure.persistence.entities.UserJpaEntity;
+=======
+>>>>>>> origin/main
 
 public class AddressJpaMapper {
     
@@ -11,7 +14,11 @@ public class AddressJpaMapper {
         return toJpaEntity(address, null);
     }
     
+<<<<<<< HEAD
     public static AddressJpaEntity toJpaEntity(Address address, UserJpaEntity userJpaEntity) {
+=======
+    public static AddressJpaEntity toJpaEntity(Address address, tech.challenge.establishment.manager.infrastructure.persistence.entities.UserJpaEntity userJpaEntity) {
+>>>>>>> origin/main
         if (address == null) return null;
         
         AddressJpaEntity jpaEntity = new AddressJpaEntity();

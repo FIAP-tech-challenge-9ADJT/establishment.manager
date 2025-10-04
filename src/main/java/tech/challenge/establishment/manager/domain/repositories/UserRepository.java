@@ -20,6 +20,9 @@ public interface UserRepository {
     boolean existsByEmail(Email email);
     
     boolean existsByLogin(Login login);
+<<<<<<< HEAD
 
     boolean existsById(UserId id);
+=======
+>>>>>>> origin/main
 }
