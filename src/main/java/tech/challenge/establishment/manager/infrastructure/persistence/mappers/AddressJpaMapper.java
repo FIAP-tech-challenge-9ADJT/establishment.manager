@@ -3,6 +3,7 @@ package tech.challenge.establishment.manager.infrastructure.persistence.mappers;
 import tech.challenge.establishment.manager.domain.entities.Address;
 import tech.challenge.establishment.manager.domain.valueobjects.UserId;
 import tech.challenge.establishment.manager.infrastructure.persistence.entities.AddressJpaEntity;
+import tech.challenge.establishment.manager.infrastructure.persistence.entities.UserJpaEntity;
 
 public class AddressJpaMapper {
     

@@ -1,9 +1,11 @@
 package tech.challenge.establishment.manager.presentation.mappers;
 
 import tech.challenge.establishment.manager.domain.entities.Address;
+import tech.challenge.establishment.manager.domain.valueobjects.PostalCode;
 import tech.challenge.establishment.manager.domain.valueobjects.UserId;
 import tech.challenge.establishment.manager.presentation.dtos.address.CreateAddressDTO;
 import tech.challenge.establishment.manager.presentation.dtos.address.AddressResponseDTO;
+import tech.challenge.establishment.manager.presentation.dtos.address.UpdateAddressDTO;
 
 public class AddressDtoMapper {
     
@@ -24,6 +26,19 @@ public class AddressDtoMapper {
             dto.postalCode(),
             dto.number(),
             userId
+        );
+    }
+
+    public static Address fromUpdateDto(UpdateAddressDTO dto, Address existingAddress) {
+        if (dto == null) return existingAddress;
+
+        return new Address(
+                existingAddress.getId(),
+                dto.street() != null ? dto.street() : existingAddress.getStreet(),
+                dto.city() != null ? dto.city() : existingAddress.getCity(),
+                dto.postalCode() != null ? new PostalCode(dto.postalCode()) : existingAddress.getPostalCode(),
+                dto.number() != null ? dto.number() : existingAddress.getNumber(),
+                existingAddress.getUserId()
         );
     }
     
