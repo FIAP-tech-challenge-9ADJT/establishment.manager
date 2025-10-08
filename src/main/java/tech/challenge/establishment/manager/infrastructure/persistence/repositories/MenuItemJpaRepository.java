@@ -1,0 +1,15 @@
+package tech.challenge.establishment.manager.infrastructure.persistence.repositories;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+import tech.challenge.establishment.manager.infrastructure.persistence.entities.MenuItemJpaEntity;
+
+import java.util.List;
+
+public interface MenuItemJpaRepository extends JpaRepository<MenuItemJpaEntity, Long> {
+
+    List<MenuItemJpaEntity> findAllByRestaurant_Id(Long restaurantId);
+
+    boolean existsByNameAndRestaurant_Id(String name, Long restaurantId);
+}
+
+

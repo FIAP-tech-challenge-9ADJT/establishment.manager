@@ -1,6 +1,5 @@
 package tech.challenge.establishment.manager.domain.usecases.restaurant;
 
-import tech.challenge.establishment.manager.domain.entities.Address;
 import tech.challenge.establishment.manager.domain.entities.Restaurant;
 import tech.challenge.establishment.manager.domain.entities.RestaurantAddress;
 import tech.challenge.establishment.manager.domain.exceptions.RestaurantAlreadyExistsException;
