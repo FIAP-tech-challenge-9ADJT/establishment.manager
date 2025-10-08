@@ -1,10 +1,13 @@
 package tech.challenge.establishment.manager.domain.usecases.menuItem;
 
 import tech.challenge.establishment.manager.domain.entities.MenuItem;
+import tech.challenge.establishment.manager.domain.entities.Restaurant;
+import tech.challenge.establishment.manager.domain.exceptions.AccessDeniedException;
 import tech.challenge.establishment.manager.domain.exceptions.MenuItemAlreadyExistsException;
 import tech.challenge.establishment.manager.domain.repositories.MenuItemRepository;
 import tech.challenge.establishment.manager.domain.repositories.RestaurantRepository;
 import tech.challenge.establishment.manager.domain.valueobjects.RestaurantId;
+import tech.challenge.establishment.manager.domain.valueobjects.UserId;
 
 public class CreateMenuItemUseCase {
 
@@ -17,10 +20,14 @@ public class CreateMenuItemUseCase {
     }
 
     public MenuItem execute(String name, String description, Double price,
-                            String photoUrl, RestaurantId restaurantId) {
+                            String photoUrl, RestaurantId restaurantId, UserId currentUserId, boolean isAdmin) {
 
-        if (!restaurantRepository.existsById(restaurantId)) {
-            throw new IllegalArgumentException("Restaurant not found: " + restaurantId.value());
+        Restaurant restaurant = restaurantRepository.findById(restaurantId)
+                .orElseThrow(() -> new IllegalArgumentException("Restaurant not found: " + restaurantId.value()));
+
+        // Verificar se o usuário atual é o dono do restaurante ou ADMIN
+        if (!isAdmin && !restaurant.getOwnerId().equals(currentUserId)) {
+            throw new AccessDeniedException("Access denied: You can only create menu items for your own restaurant");
         }
 
         if (menuItemsRepository.existsByNameAndRestaurant(name, restaurantId)) {

@@ -5,6 +5,7 @@ import tech.challenge.establishment.manager.application.usecases.menuItem.*;
 import tech.challenge.establishment.manager.domain.entities.MenuItem;
 import tech.challenge.establishment.manager.domain.valueobjects.MenuItemId;
 import tech.challenge.establishment.manager.domain.valueobjects.RestaurantId;
+import tech.challenge.establishment.manager.domain.valueobjects.UserId;
 
 import java.util.List;
 
@@ -32,17 +33,17 @@ public class MenuItemApplicationService {
     }
 
     public MenuItem createMenuItem(String name, String description, Double price,
-                                   String photoUrl, RestaurantId restaurantId) {
-        return createMenuItemUseCase.execute(name, description, price, photoUrl, restaurantId);
+                                   String photoUrl, RestaurantId restaurantId, UserId currentUserId, boolean isAdmin) {
+        return createMenuItemUseCase.execute(name, description, price, photoUrl, restaurantId, currentUserId, isAdmin);
     }
 
     public MenuItem updateMenuItem(MenuItemId menuItemId, String name, String description,
-                                   Double price, String photoUrl, RestaurantId restaurantId) {
-        return updateMenuItemUseCase.execute(menuItemId, name, description, price, photoUrl, restaurantId);
+                                   Double price, String photoUrl, RestaurantId restaurantId, UserId currentUserId, boolean isAdmin) {
+        return updateMenuItemUseCase.execute(menuItemId, name, description, price, photoUrl, restaurantId, currentUserId, isAdmin);
     }
 
-    public void deleteMenuItem(MenuItemId menuItemId) {
-        deleteMenuItemUseCase.execute(menuItemId);
+    public void deleteMenuItem(MenuItemId menuItemId, UserId currentUserId, boolean isAdmin) {
+        deleteMenuItemUseCase.execute(menuItemId, currentUserId, isAdmin);
     }
 
     public MenuItem getMenuItemById(MenuItemId menuItemId) {

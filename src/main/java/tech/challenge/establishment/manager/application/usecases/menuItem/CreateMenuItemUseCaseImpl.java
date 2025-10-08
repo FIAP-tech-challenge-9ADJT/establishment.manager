@@ -6,6 +6,7 @@ import tech.challenge.establishment.manager.domain.repositories.MenuItemReposito
 import tech.challenge.establishment.manager.domain.repositories.RestaurantRepository;
 import tech.challenge.establishment.manager.domain.usecases.menuItem.CreateMenuItemUseCase;
 import tech.challenge.establishment.manager.domain.valueobjects.RestaurantId;
+import tech.challenge.establishment.manager.domain.valueobjects.UserId;
 
 @Service
 public class CreateMenuItemUseCaseImpl extends CreateMenuItemUseCase {
@@ -20,8 +21,10 @@ public class CreateMenuItemUseCaseImpl extends CreateMenuItemUseCase {
                             String description,
                             Double price,
                             String photoUrl,
-                            RestaurantId restaurantId) {
-        return super.execute(name, description, price, photoUrl, restaurantId);
+                            RestaurantId restaurantId,
+                            UserId currentUserId,
+                            boolean isAdmin) {
+        return super.execute(name, description, price, photoUrl, restaurantId, currentUserId, isAdmin);
     }
 }
 

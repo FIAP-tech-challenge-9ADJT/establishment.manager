@@ -3,11 +3,14 @@ package tech.challenge.establishment.manager.presentation.controllers;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import tech.challenge.establishment.manager.application.services.MenuItemApplicationService;
 import tech.challenge.establishment.manager.domain.entities.MenuItem;
 import tech.challenge.establishment.manager.domain.valueobjects.MenuItemId;
 import tech.challenge.establishment.manager.domain.valueobjects.RestaurantId;
+import tech.challenge.establishment.manager.domain.valueobjects.UserId;
+import tech.challenge.establishment.manager.infrastructure.persistence.entities.UserJpaEntity;
 import tech.challenge.establishment.manager.presentation.dtos.menuItem.CreateMenuItemDTO;
 import tech.challenge.establishment.manager.presentation.dtos.menuItem.MenuItemResponseDTO;
 import tech.challenge.establishment.manager.presentation.dtos.menuItem.UpdateMenuItemDTO;
@@ -27,14 +30,20 @@ public class MenuItemController {
 
     @PostMapping
     public ResponseEntity<MenuItemResponseDTO> createMenuItem(
-            @Valid @RequestBody CreateMenuItemDTO dto
+            @Valid @RequestBody CreateMenuItemDTO dto,
+            @AuthenticationPrincipal UserJpaEntity authenticatedUser
     ) {
+        boolean isAdmin = authenticatedUser.getRoles().stream()
+                .anyMatch(role -> "ADMIN".equals(role.getName().name()));
+        
         MenuItem created = menuItemApplicationService.createMenuItem(
                 dto.name(),
                 dto.description(),
                 dto.price(),
                 dto.photoUrl(),
-                RestaurantId.of(dto.restaurantId())
+                RestaurantId.of(dto.restaurantId()),
+                UserId.of(authenticatedUser.getId()),
+                isAdmin
         );
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(MenuItemDtoMapper.toResponseDto(created));
@@ -43,22 +52,34 @@ public class MenuItemController {
     @PutMapping("/{id}")
     public ResponseEntity<MenuItemResponseDTO> updateMenuItem(
             @PathVariable Long id,
-            @Valid @RequestBody UpdateMenuItemDTO dto
+            @Valid @RequestBody UpdateMenuItemDTO dto,
+            @AuthenticationPrincipal UserJpaEntity authenticatedUser
     ) {
+        boolean isAdmin = authenticatedUser.getRoles().stream()
+                .anyMatch(role -> "ADMIN".equals(role.getName().name()));
+                
         MenuItem updated = menuItemApplicationService.updateMenuItem(
                 MenuItemId.of(id),
                 dto.name(),
                 dto.description(),
                 dto.price(),
                 dto.photoUrl(),
-                RestaurantId.of(dto.restaurantId())
+                RestaurantId.of(dto.restaurantId()),
+                UserId.of(authenticatedUser.getId()),
+                isAdmin
         );
         return ResponseEntity.ok(MenuItemDtoMapper.toResponseDto(updated));
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteMenuItem(@PathVariable Long id) {
-        menuItemApplicationService.deleteMenuItem(MenuItemId.of(id));
+    public ResponseEntity<Void> deleteMenuItem(
+            @PathVariable Long id,
+            @AuthenticationPrincipal UserJpaEntity authenticatedUser
+    ) {
+        boolean isAdmin = authenticatedUser.getRoles().stream()
+                .anyMatch(role -> "ADMIN".equals(role.getName().name()));
+                
+        menuItemApplicationService.deleteMenuItem(MenuItemId.of(id), UserId.of(authenticatedUser.getId()), isAdmin);
         return ResponseEntity.noContent().build();
     }
 

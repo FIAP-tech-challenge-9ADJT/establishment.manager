@@ -1,26 +1,42 @@
 package tech.challenge.establishment.manager.domain.usecases.menuItem;
 
 import tech.challenge.establishment.manager.domain.entities.MenuItem;
+import tech.challenge.establishment.manager.domain.entities.Restaurant;
+import tech.challenge.establishment.manager.domain.exceptions.AccessDeniedException;
 import tech.challenge.establishment.manager.domain.exceptions.MenuItemAlreadyExistsException;
 import tech.challenge.establishment.manager.domain.exceptions.MenuItemNotFoundException;
 import tech.challenge.establishment.manager.domain.repositories.MenuItemRepository;
+import tech.challenge.establishment.manager.domain.repositories.RestaurantRepository;
 import tech.challenge.establishment.manager.domain.valueobjects.MenuItemId;
 import tech.challenge.establishment.manager.domain.valueobjects.Name;
 import tech.challenge.establishment.manager.domain.valueobjects.RestaurantId;
+import tech.challenge.establishment.manager.domain.valueobjects.UserId;
 
 public class UpdateMenuItemUseCase {
 
     protected final MenuItemRepository menuItemsRepository;
+    protected final RestaurantRepository restaurantRepository;
 
-    public UpdateMenuItemUseCase(MenuItemRepository menuItemsRepository) {
+    public UpdateMenuItemUseCase(MenuItemRepository menuItemsRepository, RestaurantRepository restaurantRepository) {
         this.menuItemsRepository = menuItemsRepository;
+        this.restaurantRepository = restaurantRepository;
     }
 
     public MenuItem execute(MenuItemId id, String newName, String newDescription, Double newPrice,
-                            String newPhotoUrl, RestaurantId restaurantId) {
+                            String newPhotoUrl, RestaurantId restaurantId, UserId currentUserId, boolean isAdmin) {
 
         MenuItem existing = menuItemsRepository.findById(id)
                 .orElseThrow(() -> new MenuItemNotFoundException(id));
+
+        // Verificar se o usuário atual é o dono do restaurante do item ou ADMIN
+        if (!isAdmin) {
+            Restaurant restaurant = restaurantRepository.findById(existing.getRestaurantId())
+                    .orElseThrow(() -> new IllegalArgumentException("Restaurant not found: " + existing.getRestaurantId().value()));
+
+            if (!restaurant.getOwnerId().equals(currentUserId)) {
+                throw new AccessDeniedException("Access denied: You can only update menu items from your own restaurant");
+            }
+        }
 
         final MenuItemId existingId = existing.getId();
 
