@@ -66,6 +66,14 @@ public class SecurityConfig {
                 req.requestMatchers(HttpMethod.GET, "/restaurants/**").hasAnyRole("USER", "RESTAURANT_OWNER", "ADMIN");
                 req.requestMatchers(HttpMethod.GET, "/restaurants").hasAnyRole("USER", "RESTAURANT_OWNER", "ADMIN");
 
+                // MENU ITEMS
+                req.requestMatchers(HttpMethod.POST, "/menu-items").hasAnyRole("RESTAURANT_OWNER", "ADMIN");
+                req.requestMatchers(HttpMethod.PUT, "/menu-items/**").hasAnyRole("RESTAURANT_OWNER", "ADMIN");
+                req.requestMatchers(HttpMethod.DELETE, "/menu-items/**").hasAnyRole("RESTAURANT_OWNER", "ADMIN");
+                // Usuários também podem visualizar o cardápio
+                req.requestMatchers(HttpMethod.GET, "/menu-items/**").hasAnyRole("USER", "RESTAURANT_OWNER", "ADMIN");
+                req.requestMatchers(HttpMethod.GET, "/menu-items").hasAnyRole("USER", "RESTAURANT_OWNER", "ADMIN");
+
                 // QUALQUER OUTRO REQUER AUTENTICAÇÃO
                 req.anyRequest().authenticated();
             })

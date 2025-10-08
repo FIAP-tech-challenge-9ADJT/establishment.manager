@@ -8,11 +8,24 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import tech.challenge.establishment.manager.presentation.dtos.error.ErrorResponseDTO;
+import tech.challenge.establishment.manager.domain.exceptions.AccessDeniedException;
 import tech.challenge.establishment.manager.exceptions.DataConflictException;
 import tech.challenge.establishment.manager.exceptions.ResourceNotFoundException;
 
 @RestControllerAdvice
 public class DataExceptionHandler {
+
+    @ExceptionHandler(AccessDeniedException.class)
+    public ResponseEntity<ErrorResponseDTO> handleAccessDenied(
+            AccessDeniedException ex, HttpServletRequest request) {
+        ErrorResponseDTO error = ErrorResponseDTO.of(
+                HttpStatus.FORBIDDEN.value(),
+                "Access Denied",
+                ex.getMessage(),
+                request.getRequestURI()
+        );
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(error);
+    }
 
     @ExceptionHandler(ResourceNotFoundException.class)
     public ResponseEntity<ErrorResponseDTO> handleResourceNotFound(

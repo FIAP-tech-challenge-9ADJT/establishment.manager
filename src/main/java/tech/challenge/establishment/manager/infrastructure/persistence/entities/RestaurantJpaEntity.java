@@ -25,7 +25,7 @@ public class RestaurantJpaEntity {
     @JsonManagedReference
     private RestaurantAddressJpaEntity restaurantAddress;
     @Column(name = "kitchen_type", nullable = false)
-    private String KitchenType;
+    private String kitchenType;
     @Column(name = "start_operation", nullable = false)
     private LocalTime startOperation;
     @Column(name = "end_operation", nullable = false)
