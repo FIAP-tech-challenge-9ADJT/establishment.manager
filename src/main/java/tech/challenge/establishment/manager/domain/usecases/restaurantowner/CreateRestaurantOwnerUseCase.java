@@ -20,24 +20,19 @@ public class CreateRestaurantOwnerUseCase {
     }
 
     public User execute(String name, String email, String login, String password, Address address, Role.RoleName roleName) {
-        // Validar se email já existe
         if (userRepository.existsByEmail(Email.of(email))) {
             throw new UserAlreadyExistsException("email", email);
         }
         
-        // Validar se login já existe
         if (userRepository.existsByLogin(Login.of(login))) {
             throw new UserAlreadyExistsException("login", login);
         }
         
-        // Buscar a role
         Role role = roleRepository.findByName(roleName)
             .orElseThrow(() -> new RuntimeException("Role não encontrada: " + roleName));
         
-        // Criar usuário
         User user = User.create(name, email, login, password, address);
         
-        // Adicionar a role especificada
         user = user.addRole(role);
 
         return userRepository.save(user);

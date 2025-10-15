@@ -1,16 +1,20 @@
 package tech.challenge.establishment.manager.exceptions.handlers;
 
-import jakarta.persistence.EntityNotFoundException;
-import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-import tech.challenge.establishment.manager.presentation.dtos.error.ErrorResponseDTO;
+
+import jakarta.persistence.EntityNotFoundException;
+import jakarta.servlet.http.HttpServletRequest;
 import tech.challenge.establishment.manager.domain.exceptions.AccessDeniedException;
+import tech.challenge.establishment.manager.domain.exceptions.MenuItemNotFoundException;
+import tech.challenge.establishment.manager.domain.exceptions.RestaurantNotFoundException;
+import tech.challenge.establishment.manager.domain.exceptions.UserNotFoundException;
 import tech.challenge.establishment.manager.exceptions.DataConflictException;
 import tech.challenge.establishment.manager.exceptions.ResourceNotFoundException;
+import tech.challenge.establishment.manager.presentation.dtos.error.ErrorResponseDTO;
 
 @RestControllerAdvice
 public class DataExceptionHandler {
@@ -38,6 +42,30 @@ public class DataExceptionHandler {
         );
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
     }
+    
+    @ExceptionHandler(MenuItemNotFoundException.class)
+    public ResponseEntity<ErrorResponseDTO> handleMenuItemNotFoundException(
+    		MenuItemNotFoundException ex, HttpServletRequest request) {
+        ErrorResponseDTO error = ErrorResponseDTO.of(
+                HttpStatus.NOT_FOUND.value(),
+                "Resource Not Found",
+                ex.getMessage(),
+                request.getRequestURI()
+        );
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
+    }
+    
+    @ExceptionHandler(RestaurantNotFoundException.class)
+    public ResponseEntity<ErrorResponseDTO> handleRestaurantNotFoundException(
+    		RestaurantNotFoundException ex, HttpServletRequest request) {
+        ErrorResponseDTO error = ErrorResponseDTO.of(
+                HttpStatus.NOT_FOUND.value(),
+                "Resource Not Found",
+                ex.getMessage(),
+                request.getRequestURI()
+        );
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
+    }
 
     @ExceptionHandler(EntityNotFoundException.class)
     public ResponseEntity<ErrorResponseDTO> handleEntityNotFound(
@@ -51,6 +79,18 @@ public class DataExceptionHandler {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
     }
 
+    @ExceptionHandler(UserNotFoundException.class)
+    public ResponseEntity<ErrorResponseDTO> handleUserNotFoundException(
+    		UserNotFoundException ex, HttpServletRequest request) {
+        ErrorResponseDTO error = ErrorResponseDTO.of(
+                HttpStatus.NOT_FOUND.value(),
+                "Entity Not Found",
+                ex.getMessage(),
+                request.getRequestURI()
+        );
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
+    }
+    
     @ExceptionHandler(DataConflictException.class)
     public ResponseEntity<ErrorResponseDTO> handleDataConflict(
             DataConflictException ex, HttpServletRequest request) {
