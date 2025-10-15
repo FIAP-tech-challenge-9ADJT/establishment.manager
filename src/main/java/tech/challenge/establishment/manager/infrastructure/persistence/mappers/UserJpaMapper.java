@@ -25,19 +25,18 @@ public class UserJpaMapper {
         jpaEntity.setCreatedAt(user.getCreatedAt());
         jpaEntity.setUpdatedAt(user.getUpdatedAt());
 
-        // Removido mapeamento de userType
-
         if (user.getAddress() != null) {
             AddressJpaEntity addressJpaEntity = AddressJpaMapper.toJpaEntity(user.getAddress(), jpaEntity);
             jpaEntity.setAddress(addressJpaEntity);
         }
 
         if (user.getRoles() != null && !user.getRoles().isEmpty()) {
-            jpaEntity.setRoles(
-            user.getRoles().stream()
-            .map(RoleJpaMapper::toJpaEntity)
-            .collect(Collectors.toSet())
-            );
+            // Criar um novo HashSet para evitar UnsupportedOperationException
+            HashSet<tech.challenge.establishment.manager.infrastructure.persistence.entities.RoleJpaEntity> roleSet = 
+                user.getRoles().stream()
+                    .map(RoleJpaMapper::toJpaEntity)
+                    .collect(Collectors.toCollection(HashSet::new));
+            jpaEntity.setRoles(roleSet);
         }
 
         return jpaEntity;

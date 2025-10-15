@@ -11,6 +11,7 @@ import tech.challenge.establishment.manager.domain.usecases.auth.ChangePasswordU
 import tech.challenge.establishment.manager.domain.usecases.user.FindUserUseCase;
 import tech.challenge.establishment.manager.domain.usecases.user.UpdateUserUseCase;
 import tech.challenge.establishment.manager.domain.usecases.admin.DeleteUserUseCase;
+import tech.challenge.establishment.manager.domain.usecases.restaurantowner.CreateRestaurantOwnerUseCase;
 
 @Configuration
 public class UseCaseConfig {
@@ -46,5 +47,12 @@ public class UseCaseConfig {
     @Bean
     public DeleteUserUseCase deleteUserUseCase(UserRepository userRepository) {
         return new DeleteUserUseCase(userRepository);
+    }
+    
+    @Bean
+    public CreateRestaurantOwnerUseCase createRestaurantOwnerUseCase(
+            UserRepository userRepository,
+            RoleRepository roleRepository) {
+        return new CreateRestaurantOwnerUseCase(userRepository, roleRepository);
     }
 }
