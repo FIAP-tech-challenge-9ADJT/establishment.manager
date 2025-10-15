@@ -92,19 +92,19 @@ class RestaurantControllerTest {
 
     @Test
     void shouldCreateRestaurant() throws Exception {
-        // DTO de endereço para criação
+       
         CreateRestaurantAddressDTO addressDTO = new CreateRestaurantAddressDTO(
             "Rua Um", "Cidade XPTO", "12345-000", "123"
         );
-        // DTO principal de criação
+        
         CreateRestaurantDTO dto = new CreateRestaurantDTO(
             "Restaurante Teste", addressDTO, "Italian",
             LocalTime.of(10, 0), LocalTime.of(22, 0)
         );
-        // Mock do usuário
+        
         UserJpaEntity fakeUser = buildMockUser(123L, "RESTAURANT_OWNER");
 
-        // Mock dos value objects/entidades que mapeiam a resposta do Service
+       
         RestaurantId restId = RestaurantId.of(100L);
         Name restName = Name.of("Restaurante Teste");
         KitchenType kitchenType = new KitchenType("Italian");
@@ -142,11 +142,11 @@ class RestaurantControllerTest {
     @Test
     void shouldUpdateRestaurant() throws Exception {
         Long restaurantId = 44L;
-        // DTO de endereço para update
+        
         UpdateRestaurantAddressDTO addressDTO = new UpdateRestaurantAddressDTO(
             "Rua Dois", "Nova Cidade", "88888-888", "999"
         );
-        // DTO principal de update
+        
         UpdateRestaurantDTO dto = new UpdateRestaurantDTO(
             "Restaurante Atualizado",
             addressDTO,
@@ -154,10 +154,9 @@ class RestaurantControllerTest {
             LocalTime.of(9, 0),
             LocalTime.of(20, 0)
         );
-        // Mock do usuário
+        
         UserJpaEntity fakeUser = buildMockUser(44L, "RESTAURANT_OWNER");
 
-        // Mock dos value objects/entidades
         RestaurantId restId = RestaurantId.of(restaurantId);
         Name restName = Name.of("Restaurante Atualizado");
         KitchenType kitchenType = new KitchenType("French");
@@ -180,9 +179,7 @@ class RestaurantControllerTest {
         Mockito.when(restaurantMock.getEndOperation()).thenReturn(endOp);
         Mockito.when(restaurantMock.getRestaurantAddress()).thenReturn(addressMock);
 
-        // O getRestaurantById é chamado para buscar o restaurante já existindo
         Mockito.when(restaurantService.getRestaurantById(Mockito.any())).thenReturn(restaurantMock);
-        // O updateRestaurant retorna o mock atualizado
         Mockito.when(restaurantService.updateRestaurant(
             Mockito.any(), Mockito.any(), Mockito.any(), Mockito.any(), Mockito.any(), Mockito.any()
         )).thenReturn(restaurantMock);

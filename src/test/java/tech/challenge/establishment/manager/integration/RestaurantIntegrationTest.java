@@ -159,7 +159,7 @@ class RestaurantIntegrationTest {
                 .andExpect(status().isCreated());
 
         mockMvc.perform(get("/restaurants")
-                        .header("Authorization", "Bearer " + adminToken)) // Adicionando autenticação
+                        .header("Authorization", "Bearer " + adminToken)) 
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$[0].name").value("Restaurant 1"))
                 .andExpect(jsonPath("$[0].kitchenType").value("Italian"));
@@ -195,7 +195,7 @@ class RestaurantIntegrationTest {
         Long restaurantId = objectMapper.readTree(response).get("id").asLong();
 
         mockMvc.perform(get("/restaurants/" + restaurantId)
-                        .header("Authorization", "Bearer " + adminToken)) // Adicionando autenticação
+                        .header("Authorization", "Bearer " + adminToken)) 
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.name").value("Test Restaurant"))
                 .andExpect(jsonPath("$.kitchenType").value("Japanese"));
@@ -253,7 +253,6 @@ class RestaurantIntegrationTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.name").value("Updated Restaurant"))
                 .andExpect(jsonPath("$.kitchenType").value("Brazilian"));
-                // Removendo verificação de capacity pois não existe no DTO de resposta
     }
 
     @Test
@@ -282,7 +281,7 @@ class RestaurantIntegrationTest {
 
         mockMvc.perform(get("/restaurants/search")
                         .param("name", "Pizza")
-                        .header("Authorization", "Bearer " + adminToken)) // Adicionando autenticação
+                        .header("Authorization", "Bearer " + adminToken)) 
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$[0].name").value("Pizza Palace"));
     }
@@ -322,14 +321,14 @@ class RestaurantIntegrationTest {
 
         mockMvc.perform(get("/restaurants/" + restaurantId)
                         .header("Authorization", "Bearer " + adminToken))
-                .andExpect(status().isNotFound()); // Deveria retornar 404 quando restaurante não existe
+                .andExpect(status().isNotFound());  
     }
 
     @Test
     void shouldReturnNotFoundForNonExistentRestaurant() throws Exception {
         mockMvc.perform(get("/restaurants/99999")
-                        .header("Authorization", "Bearer " + adminToken)) // Adicionando autenticação
-                .andExpect(status().isNotFound()); // Deveria retornar 404 quando restaurante não existe
+                        .header("Authorization", "Bearer " + adminToken)) 
+                .andExpect(status().isNotFound()); 
     }
 }
 

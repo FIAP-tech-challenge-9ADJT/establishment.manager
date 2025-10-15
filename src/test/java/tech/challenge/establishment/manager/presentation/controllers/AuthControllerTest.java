@@ -63,7 +63,7 @@ class AuthControllerTest {
         userJpaEntity.setPassword("password123");
         userJpaEntity.setRoles(Set.of(role));
 
-        // Create domain User for the authenticate method
+        
         User domainUser = User.of(
                 1L,
                 "Test User",
@@ -76,11 +76,11 @@ class AuthControllerTest {
                 java.time.LocalDateTime.now()
         );
 
-        // Create authentication mock
+ 
         Authentication authentication = mock(Authentication.class);
         when(authentication.getPrincipal()).thenReturn(userJpaEntity);
         
-        // Mock the authentication manager
+     
         when(authenticationManager.authenticate(any(UsernamePasswordAuthenticationToken.class)))
                 .thenReturn(authentication);
         when(tokenService.generateToken(userJpaEntity)).thenReturn("mock-jwt-token");

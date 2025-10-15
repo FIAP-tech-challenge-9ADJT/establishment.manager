@@ -51,12 +51,10 @@ class RestaurantOwnerIntegrationTest {
         userRepository.deleteAll();
         roleRepository.deleteAll();
 
-        // Criar role RESTAURANT_OWNER
         RoleJpaEntity ownerRole = new RoleJpaEntity();
         ownerRole.setName(RoleJpaEntity.RoleName.RESTAURANT_OWNER);
         ownerRole = roleRepository.save(ownerRole);
 
-        // Criar usuário restaurant owner
         UserJpaEntity owner = new UserJpaEntity();
         owner.setName("Restaurant Owner");
         owner.setEmail("owner@example.com");
@@ -65,7 +63,6 @@ class RestaurantOwnerIntegrationTest {
         owner.setRoles(new java.util.HashSet<>(Set.of(ownerRole)));
         userRepository.save(owner);
 
-        // Autenticar owner e obter token
         ownerToken = getAuthToken("owner", "password123");
     }
 
@@ -144,7 +141,7 @@ class RestaurantOwnerIntegrationTest {
 
     @Test
     void shouldReturnNotFoundWhenOwnerAddressDoesNotExist() throws Exception {
-        // Como o owner não tem endereço inicialmente, deve retornar 404
+      
         mockMvc.perform(get("/restaurant-owners/address")
                         .header("Authorization", "Bearer " + ownerToken))
                 .andExpect(status().isNotFound());
@@ -152,8 +149,7 @@ class RestaurantOwnerIntegrationTest {
 
     @Test
     void shouldCreateAddressForRestaurantOwner() throws Exception {
-        // Como a implementação atual tem limitações com o relacionamento OneToOne,
-        // este teste verifica que o endpoint retorna erro apropriado quando não consegue criar o endereço
+        
         String addressJson = """
             {
                 "street": "Restaurant Street",
@@ -167,13 +163,11 @@ class RestaurantOwnerIntegrationTest {
                 .header("Authorization", "Bearer " + ownerToken)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(addressJson))
-            .andExpect(status().isConflict()); // Esperamos 409 devido à limitação da implementação
+            .andExpect(status().isConflict());  
     }
 
     @Test
     void shouldUpdateOwnerAddress() throws Exception {
-        // Como a implementação atual tem limitações com o relacionamento OneToOne,
-        // este teste verifica que retorna 404 quando tenta atualizar um endereço que não existe
         String updateAddressJson = """
                 {
                     "street": "Updated Restaurant Street",
@@ -187,12 +181,11 @@ class RestaurantOwnerIntegrationTest {
                         .header("Authorization", "Bearer " + ownerToken)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(updateAddressJson))
-                .andExpect(status().isNotFound()); // Usuário não tem endereço para atualizar
+                .andExpect(status().isNotFound()); 
     }
 
     @Test
     void shouldRequireAuthenticationForOwnerEndpoints() throws Exception {
-        // Teste sem token de autenticação
         mockMvc.perform(get("/restaurant-owners"))
                 .andExpect(status().isForbidden());
 
@@ -252,7 +245,7 @@ class RestaurantOwnerIntegrationTest {
         mockMvc.perform(post("/restaurant-owners")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(json))
-                .andExpect(status().isBadRequest()); // Email já existe
+                .andExpect(status().isBadRequest()); 
     }
 
     @Test
@@ -275,6 +268,6 @@ class RestaurantOwnerIntegrationTest {
         mockMvc.perform(post("/restaurant-owners")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(json))
-                .andExpect(status().isBadRequest()); // Login já existe
+                .andExpect(status().isBadRequest()); 
     }
 }

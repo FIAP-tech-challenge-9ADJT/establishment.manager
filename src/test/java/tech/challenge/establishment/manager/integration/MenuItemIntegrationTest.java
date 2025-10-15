@@ -54,12 +54,10 @@ class MenuItemIntegrationTest {
         userRepository.deleteAll();
         roleRepository.deleteAll();
 
-        // Cria perfil de owner
         RoleJpaEntity ownerRole = new RoleJpaEntity();
         ownerRole.setName(RoleJpaEntity.RoleName.RESTAURANT_OWNER);
         ownerRole = roleRepository.save(ownerRole);
 
-        // Cria usuário owner
         UserJpaEntity owner = new UserJpaEntity();
         owner.setName("Restaurant Owner");
         owner.setEmail("owner@example.com");
@@ -68,10 +66,8 @@ class MenuItemIntegrationTest {
         owner.setRoles(Set.of(ownerRole));
         userRepository.save(owner);
 
-        // Autentica e obtém token JWT
         ownerToken = getAuthToken("owner", "password123");
 
-        // Cria restaurante
         String createRestaurantJson = """
             {
                 "name": "Test Restaurant",
@@ -241,7 +237,6 @@ class MenuItemIntegrationTest {
                 .header("Authorization", "Bearer " + ownerToken))
             .andExpect(status().isNoContent());
 
-        // Busca para confirmar o 404 após deleção
         mockMvc.perform(get("/menu-items/" + menuItemId)
                 .header("Authorization", "Bearer " + ownerToken))
             .andExpect(status().isNotFound());

@@ -93,7 +93,6 @@ class UserTest {
         User userWithNewPassword = user.changePassword(newPassword);
 
         assertEquals(newPassword, userWithNewPassword.getPassword().value());
-        // Remove the timestamp comparison as it can be flaky in fast test execution
         assertNotNull(userWithNewPassword.getUpdatedAt());
     }
 

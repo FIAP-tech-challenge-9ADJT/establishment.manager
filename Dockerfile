@@ -10,7 +10,7 @@ WORKDIR /app
 COPY --from=dependency-builder /root/.m2 /root/.m2
 COPY src ./src
 COPY pom.xml .
-RUN mvn clean package -DskipTests -B
+RUN mvn clean package jacoco:report
 
 # Etapa de execução
 FROM eclipse-temurin:21-jre

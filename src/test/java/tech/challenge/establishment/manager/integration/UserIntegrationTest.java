@@ -66,7 +66,6 @@ class UserIntegrationTest {
         user.setLogin("testuser");
         user.setPassword(passwordEncoder.encode("password123"));
         
-        // Usar HashSet para evitar problemas com coleções imutáveis
         user.setRoles(new java.util.HashSet<>(Set.of(userRole)));
         user = userRepository.save(user);
 
@@ -126,7 +125,6 @@ class UserIntegrationTest {
 
     @Test
     void shouldUpdateUserProfile() throws Exception {
-        // Primeiro, vamos verificar se o usuário existe e tem roles configuradas
         mockMvc.perform(get("/users")
                         .header("Authorization", "Bearer " + authToken))
                 .andExpect(status().isOk());
@@ -149,8 +147,7 @@ class UserIntegrationTest {
 
     @Test
     void shouldCreateAddressForAuthenticatedUser() throws Exception {
-        // Como a implementação atual tem limitações com o relacionamento OneToOne,
-        // este teste verifica que o endpoint retorna erro apropriado quando não consegue criar o endereço
+        
         String addressJson = """
             {
                 "street": "Rua de Teste",
@@ -164,22 +161,19 @@ class UserIntegrationTest {
                 .header("Authorization", "Bearer " + authToken)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(addressJson))
-            .andExpect(status().isConflict()); // Esperamos 409 devido à limitação da implementação
+            .andExpect(status().isConflict()); 
     }
 
     @Test
     void shouldGetUserAddress() throws Exception {
-        // Como a implementação atual tem limitações com o relacionamento OneToOne,
-        // este teste verifica que retorna 404 quando não há endereço (que é o comportamento esperado)
+        
         mockMvc.perform(get("/users/address")
                         .header("Authorization", "Bearer " + authToken))
-                .andExpect(status().isNotFound()); // Usuário não tem endereço, então retorna 404
+                .andExpect(status().isNotFound()); 
     }
 
     @Test
     void shouldUpdateUserAddress() throws Exception {
-        // Como a implementação atual tem limitações com o relacionamento OneToOne,
-        // este teste verifica que retorna 404 quando tenta atualizar um endereço que não existe
         String updateAddressJson = """
                 {
                     "street": "New Street",
@@ -193,7 +187,7 @@ class UserIntegrationTest {
                         .header("Authorization", "Bearer " + authToken)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(updateAddressJson))
-                .andExpect(status().isNotFound()); // Usuário não tem endereço para atualizar
+                .andExpect(status().isNotFound());
     }
 
     @Test
@@ -223,7 +217,7 @@ class UserIntegrationTest {
         mockMvc.perform(post("/users")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(json))
-                .andExpect(status().isBadRequest()); // Mudando de isConflict() para isBadRequest()
+                .andExpect(status().isBadRequest()); 
     }
 
     @Test
@@ -246,7 +240,7 @@ class UserIntegrationTest {
         mockMvc.perform(post("/users")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(json))
-                .andExpect(status().isBadRequest()); // Mudando de isConflict() para isBadRequest()
+                .andExpect(status().isBadRequest()); 
     }
 
     @Test

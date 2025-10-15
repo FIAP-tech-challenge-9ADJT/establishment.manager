@@ -51,13 +51,10 @@ class AdminIntegrationTest {
     void setUp() throws Exception {
         userRepository.deleteAll();
         roleRepository.deleteAll();
-
-        // Criar role ADMIN
         RoleJpaEntity adminRole = new RoleJpaEntity();
         adminRole.setName(RoleJpaEntity.RoleName.ADMIN);
         adminRole = roleRepository.save(adminRole);
 
-        // Criar usuário admin
         UserJpaEntity admin = new UserJpaEntity();
         admin.setName("Admin User");
         admin.setEmail("admin@example.com");
@@ -66,12 +63,10 @@ class AdminIntegrationTest {
         admin.setRoles(new java.util.HashSet<>(Set.of(adminRole)));
         userRepository.save(admin);
 
-        // Criar role USER para testes
         RoleJpaEntity userRole = new RoleJpaEntity();
         userRole.setName(RoleJpaEntity.RoleName.USER);
         userRole = roleRepository.save(userRole);
 
-        // Criar usuário comum para testes
         UserJpaEntity testUser = new UserJpaEntity();
         testUser.setName("Test User");
         testUser.setEmail("testuser@example.com");
@@ -81,7 +76,6 @@ class AdminIntegrationTest {
         testUser = userRepository.save(testUser);
         testUserId = testUser.getId();
 
-        // Autenticar admin e obter token
         adminToken = getAuthToken("admin", "password123");
     }
 
@@ -165,29 +159,27 @@ class AdminIntegrationTest {
                         .header("Authorization", "Bearer " + adminToken))
                 .andExpect(status().isNoContent());
 
-        // Verificar que o usuário foi deletado (retorna 404 quando não encontra o usuário)
         mockMvc.perform(get("/admin/" + testUserId)
                         .header("Authorization", "Bearer " + adminToken))
-                .andExpect(status().isNotFound()); // A aplicação agora retorna 404 corretamente
+                .andExpect(status().isNotFound()); 
     }
 
     @Test
     void shouldReturnNotFoundForNonExistentUser() throws Exception {
         mockMvc.perform(get("/admin/99999")
                         .header("Authorization", "Bearer " + adminToken))
-                .andExpect(status().isNotFound()); // A aplicação agora retorna 404 corretamente
+                .andExpect(status().isNotFound()); 
     }
 
     @Test
     void shouldRequireAuthenticationForAdminEndpoints() throws Exception {
-        // Teste sem token de autenticação
         mockMvc.perform(get("/admin/" + testUserId))
                 .andExpect(status().isForbidden());
 
         mockMvc.perform(post("/admin")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("{}"))
-                .andExpect(status().isBadRequest()); // Esperamos 400 para dados inválidos, não 403
+                .andExpect(status().isBadRequest());
 
         mockMvc.perform(put("/admin/" + testUserId)
                         .contentType(MediaType.APPLICATION_JSON)
